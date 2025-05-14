@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Test qrcode thingy</h1>
+    <img id="qr" src="" alt="">
+    <input id="input" type="text">
+    <button onclick="onClick()">adsasd</button>
+    <script>
+        const img = document.querySelector('#qr')
+        const input = document.querySelector('#input')
+
+        async function onClick() {
+
+            const text = await fetch(`/qr/${input.value}`)
+            const data = await text.json()
+            img.src = 'data:image/jpeg;base64,' + data.image
+        }
+        
+    </script>
+</body>
+</html>
