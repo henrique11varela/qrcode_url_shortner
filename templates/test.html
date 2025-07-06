@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="/static/requests.js"></script>
+</head>
+
+<body>
+    <h1>Test qrcode thingy</h1>
+    <img id="qr" src="" alt="">
+    <input id="input" type="text">
+    <button onclick="onClick()">adsasd</button>
+    <script>
+        const img = document.querySelector('#qr')
+        const input = document.querySelector('#input')
+
+        async function onClick() {
+            data = await request(`/qr`, "POST", {
+                text: input.value
+            })
+            img.src = data.image
+        }
+
+    </script>
+</body>
+
+</html>
