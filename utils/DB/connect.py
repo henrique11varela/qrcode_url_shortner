@@ -1,25 +1,26 @@
 from sqlalchemy import create_engine, text
-import uuid
+import os
 
-myuuid = uuid.uuid4()
+db_path_list = ['database', 'db.db']
+db_path = os.path.join(*db_path_list)
 
-engine = create_engine("sqlite+pysqlite:///:memory:", echo=True)
+new_db = False
+if not os.path.exists(db_path):
+    os.makedirs(os.path.join(*db_path_list[:-1]))
+    with open(db_path, 'w') as fp:
+        pass
+    new_db = True
+    print('Created DB file')
+
+engine = create_engine(f"sqlite+pysqlite:///{os.path.abspath(db_path)}", echo=True)
+
+if new_db:
+    with engine.connect() as conn:
+        conn.execute(text("CREATE TABLE test_table (id INTEGER PRIMARY KEY ASC, test TEXT)"))
+        conn.commit()
 
 
-with engine.connect() as conn:
-    conn.execute(text("CREATE TABLE some_table (x int, y int, z text)"))
-    conn.execute(
-        text("INSERT INTO some_table (x, y, z) VALUES (:x, :y, :z)"),
-        [{"x": 1, "y": 1, "z": f'{myuuid}'}, {"x": 2, "y": 4, "z": "test"}],
-    )
-    conn.commit()
 
-with engine.connect() as conn:
-    result = conn.execute(text("SELECT x, y, z FROM some_table"))
-    for row in result:
-        print(f"x: {row.x}  y: {row.y}  z: {row.z}")
 
-with engine.connect() as conn:
-    result = conn.execute(text("SELECT x, y FROM some_table WHERE z LIKE :t"), {"t": f'{myuuid}'})
-    for row in result:
-        print(f"x: {row.x}  y: {row.y}")
+
+
