@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request
 from io import BytesIO
-from utils.QR import create_qr_code
+from services.QR import create_qr_code
 
 PORT = 5000
 HOST = "0.0.0.0"
